@@ -1,0 +1,3 @@
+c:/kafka/bin/windows/kafka-topics.bat --bootstrap-server localhost:9092 --topic sales --create --partitions 2 --replication-factor 1
+c:/kafka/bin/windows/kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic sales --group salesConsumer
+c:/kafka/bin/windows/kafka-console-producer.bat --bootstrap-server localhost:9092 --topic sales 
