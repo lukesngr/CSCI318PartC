@@ -1,3 +1,4 @@
 c:/kafka/bin/windows/kafka-topics.bat --bootstrap-server localhost:9092 --topic sales --create --partitions 2 --replication-factor 1
-c:/kafka/bin/windows/kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic sales --group salesConsumer
-c:/kafka/bin/windows/kafka-console-producer.bat --bootstrap-server localhost:9092 --topic sales 
+c:/kafka/bin/windows/kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic sales --group salesConsumer 
+C:\kafka\bin\windows\zookeeper-server-start.bat C:\kafka\config\zookeeper.properties
+C:\kafka\bin\windows\kafka-server-start.bat C:\kafka\config\server.properties

@@ -55,7 +55,6 @@ public class CustomerController {
 
         if (matcher.find()) {
             String customerIdStr = matcher.group(1);
-            System.out.println(customerIdStr);
             Long customerId = Long.parseLong(customerIdStr);
             Customer customerToUpdate = customerRepository.findById(customerId).get();
             customerToUpdate.setMoney(customerToUpdate.getMoney()-1);

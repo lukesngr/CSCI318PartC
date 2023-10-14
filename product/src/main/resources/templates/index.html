@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Management</title>
+</head>
+<body>
+<h1>Product Management</h1>
+
+<!-- Product List -->
+<h2>Product List</h2>
+<ul id="product-list">
+    <!-- Products will be dynamically added here -->
+</ul>
+
+<!-- Product Form -->
+<h2>Add/Edit Product</h2>
+<form id="product-form">
+    <input type="hidden" id="product-id"/>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"/><br/>
+
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description"/><br/>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price"/><br/>
+
+    <button id="save-button">Save</button>
+    <button id="cancel-button">Cancel</button>
+</form>
+
+<!-- JavaScript to interact with the API -->
+<script>
+    // Function to populate the product list
+    function populateProductList(products) {
+        const productList = document.getElementById("product-list");
+        productList.innerHTML = "";
+
+        products.forEach(product => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${product.name} - ${product.description} - $${product.price}`;
+
+            const editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+            editButton.addEventListener("click", () => editProduct(product.id));
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => deleteProduct(product.id));
+
+            listItem.appendChild(editButton);
+            listItem.appendChild(deleteButton);
+            productList.appendChild(listItem);
+        });
+    }
+
+    // Function to populate the form for editing a product
+    function populateProductForm(product) {
+        document.getElementById("product-id").value = product.id;
+        document.getElementById("name").value = product.name;
+        document.getElementById("description").value = product.description;
+        document.getElementById("price").value = product.price;
+    }
+
+    // Function to clear the form
+    function clearProductForm() {
+        document.getElementById("product-id").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("price").value = "";
+    }
+
+    // Function to create or update a product
+    function saveProduct() {
+        const productId = document.getElementById("product-id").value;
+        const name = document.getElementById("name").value;
+        const description = document.getElementById("description").value;
+        const price = document.getElementById("price").value;
+
+        const productData = {
+            name: name,
+            description: description,
+            price: price
+        };
+
+        const apiUrl = productId ? `/api/products/${productId}` : '/api/products';
+
+        const method = productId ? 'PUT' : 'POST';
+
+        fetch(apiUrl, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    alert(`${productId ? 'Updated' : 'Created'} Product: ${data.name}`);
+                    clearProductForm();
+                    loadProducts();
+                } else {
+                    alert('Error saving product.');
+                }
+            });
+    }
+
+    // Function to edit a product
+    function editProduct(productId) {
+        fetch(`/api/products/${productId}`)
+            .then(response => response.json())
+            .then(product => {
+                if (product.id) {
+                    populateProductForm(product);
+                } else {
+                    alert('Product not found.');
+                }
+            });
+    }
+
+    // Function to delete a product
+    function deleteProduct(productId) {
+        if (confirm("Are you sure you want to delete this product?")) {
+            fetch(`/api/products/${productId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.status === 204) {
+                        alert('Product deleted.');
+                        loadProducts();
+                        clearProductForm();
+                    } else {
+                        alert('Error deleting product.');
+                    }
+                });
+        }
+    }
+
+    // Function to load products and populate the list
+    function loadProducts() {
+        fetch('/api/products')
+            .then(response => response.json())
+            .then(products => populateProductList(products));
+    }
+
+    // Load products when the page loads
+    loadProducts();
+
+    // Event listener for the save button
+    document.getElementById("save-button").addEventListener("click", saveProduct);
+
+    // Event listener for the cancel button
+    document.getElementById("cancel-button").addEventListener("click", clearProductForm);
+</script>
+</body>
+</html>
