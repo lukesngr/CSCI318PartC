@@ -35,6 +35,12 @@ public class ProductController {
         return productRepository.findById(id);
     }
 
+    @GetMapping("/name/{name}")
+    public boolean getProductByName(@PathVariable String name) {
+        return productRepository.findAll().stream()
+                .anyMatch(product -> product.getName().equals(name));
+    }
+
     // Update a product
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {

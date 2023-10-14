@@ -36,9 +36,9 @@ public class CustomerController {
         return customerRepository.findById(id);
     }
 
-    @GetMapping("/checkPassword/{id}")
-    public boolean checkIfPasswordIsCorrect(@PathVariable Long id, @RequestBody String password) {
-        return customerRepository.findById(id).get().getPassword() == password;
+    @GetMapping("/checkPassword/{id}/{password}")
+    public boolean checkIfPasswordIsCorrect(@PathVariable Long id, @PathVariable String password) {
+        return customerRepository.findById(id).get().getPassword().equals(password);
     }
 
     // Update a customer
